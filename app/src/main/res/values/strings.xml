@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">FittDroid</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="heightcm">Height(cm):</string>
+    <string name="weightkg">Weight(kg):</string>
+    <string name="waistcm">Waist(cm):</string>
+    <string name="hipcm">Hip(cm):</string>
+    <string name="neckcm">Neck(cm):</string>
+    <string name="gender">Gender:</string>
+    <string name="female">female</string>
+    <string name="male">male</string>
+    <string name="calc">Calculate</string>
+</resources>
