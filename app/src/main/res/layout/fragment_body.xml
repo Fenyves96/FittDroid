@@ -1,211 +1,211 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
 
         <LinearLayout
-
-            android:layout_width="@dimen/bodylinearlayoutwidth"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
+
+            <LinearLayout
+
+                android:layout_width="@dimen/bodylinearlayoutwidth"
                 android:layout_height="wrap_content"
-                android:text="@string/heightcm"
-                android:textSize="@dimen/default_textsize"
-
-                />
-            <EditText
-                android:inputType="numberDecimal"
-                android:id="@+id/etheight"
+                android:orientation="horizontal"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_textsize"
-                />
+                android:padding="@dimen/activity_horizontal_margin">
 
-        </LinearLayout>
-        <LinearLayout
-
-            android:layout_width="@dimen/bodylinearlayoutwidth"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/weightkg"
-                android:textSize="@dimen/default_textsize"
-
-                />
-            <EditText
-                android:inputType="numberDecimal"
-                android:id="@+id/etweight"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_textsize"
-                />
-
-        </LinearLayout>
-        <LinearLayout
-
-            android:layout_width="@dimen/bodylinearlayoutwidth"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/waistcm"
-                android:textSize="@dimen/default_textsize"
-
-                />
-            <EditText
-                android:inputType="numberDecimal"
-                android:id="@+id/etwaist"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_textsize"
-                />
-
-        </LinearLayout>
-        <LinearLayout
-
-            android:layout_width="@dimen/bodylinearlayoutwidth"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hipcm"
-                android:textSize="@dimen/default_textsize"
-                android:paddingRight="10sp"
-
-                />
-            <EditText
-                android:inputType="numberDecimal"
-                android:id="@+id/ethip"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_textsize"
-                />
-
-        </LinearLayout>
-        <LinearLayout
-
-            android:layout_width="@dimen/bodylinearlayoutwidth"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TextView
-
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/neckcm"
-                android:textSize="@dimen/default_textsize"
-
-                />
-            <EditText
-                android:inputType="numberDecimal"
-                android:id="@+id/etneck"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_textsize"
-                />
-
-        </LinearLayout>
-        <LinearLayout
-
-            android:layout_width="240sp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <TextView
-                android:paddingRight="20sp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/gender"
-                android:textSize="@dimen/default_textsize"
-
-                />
-
-            <RadioGroup
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/rbfemale"
-                    android:layout_width="wrap_content"
-
-
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/female"
-                    android:textSize="@dimen/default_textsize"/>
-
-                <RadioButton
-                    android:id="@+id/rbmale"
+                <TextView
+                    android:layout_gravity="center_vertical"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/heightcm"
+                    android:textSize="@dimen/default_textsize"
+
+                    />
+                <EditText
+                    android:inputType="numberDecimal"
+                    android:id="@+id/etheight"
                     android:layout_gravity="center_horizontal"
-                    android:text="@string/male"
-                    android:textSize="@dimen/default_textsize"/>
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_textsize"
+                    />
 
-            </RadioGroup>
+            </LinearLayout>
+            <LinearLayout
+
+                android:layout_width="@dimen/bodylinearlayoutwidth"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/weightkg"
+                    android:textSize="@dimen/default_textsize"
+
+                    />
+                <EditText
+                    android:inputType="numberDecimal"
+                    android:id="@+id/etweight"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_textsize"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:layout_width="@dimen/bodylinearlayoutwidth"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/waistcm"
+                    android:textSize="@dimen/default_textsize"
+
+                    />
+                <EditText
+                    android:inputType="numberDecimal"
+                    android:id="@+id/etwaist"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_textsize"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:layout_width="@dimen/bodylinearlayoutwidth"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/hipcm"
+                    android:textSize="@dimen/default_textsize"
+                    android:paddingRight="10sp"
+
+                    />
+                <EditText
+                    android:inputType="numberDecimal"
+                    android:id="@+id/ethip"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_textsize"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:layout_width="@dimen/bodylinearlayoutwidth"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/neckcm"
+                    android:textSize="@dimen/default_textsize"
+
+                    />
+                <EditText
+                    android:inputType="numberDecimal"
+                    android:id="@+id/etneck"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/default_textsize"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+
+                android:layout_width="240sp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:paddingRight="20sp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gender"
+                    android:textSize="@dimen/default_textsize"
+
+                    />
+
+                <RadioGroup
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbfemale"
+                        android:layout_width="wrap_content"
 
 
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/female"
+                        android:textSize="@dimen/default_textsize"/>
+
+                    <RadioButton
+                        android:id="@+id/rbmale"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/male"
+                        android:textSize="@dimen/default_textsize"/>
+
+                </RadioGroup>
+
+
+
+            </LinearLayout>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/calc"
+                android:textSize="@dimen/default_textsize"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/calcbtn"
+                />
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/tvcalc"
+                />
 
         </LinearLayout>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/calc"
-            android:textSize="@dimen/default_textsize"
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/calcbtn"
-            />
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/tvcalc"
-            />
-
-    </LinearLayout>
-
-
 
 </FrameLayout>
