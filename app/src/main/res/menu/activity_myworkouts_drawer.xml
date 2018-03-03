@@ -13,13 +13,13 @@
             android:icon="@mipmap/ic_workouts"
             android:title="Workouts" />
         <item
-            android:id="@+id/nav_statistics"
-            android:icon="@mipmap/ic_statistics"
-            android:title="Statisctics" />
-        <item
             android:id="@+id/nav_exercises"
             android:icon="@mipmap/ic_exercises"
             android:title="Exercises"/>
+        <item
+            android:id="@+id/nav_statistics"
+            android:icon="@mipmap/ic_statistics"
+            android:title="Statisctics" />
         <item
             android:id="@+id/nav_body"
             android:icon="@mipmap/ic_body"

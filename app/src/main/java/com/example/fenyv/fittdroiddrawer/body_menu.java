@@ -43,34 +43,41 @@ public class body_menu extends Fragment {
         getActivity().setTitle("Body");
         calcTv=view.findViewById(R.id.tvcalc);
         calcbtn=view.findViewById(R.id.calcbtn);
-        etHeight=getActivity().findViewById(R.id.etheight);
-        etWeight=getActivity().findViewById(R.id.etweight);
-        etWaist=getActivity().findViewById(R.id.etwaist);
-        etHip=getActivity().findViewById(R.id.ethip);
-        etNeck=getActivity().findViewById(R.id.etneck);
+        etHeight=view.findViewById(R.id.etheight);
+        etWeight=view.findViewById(R.id.etweight);
+        etWaist=view.findViewById(R.id.etwaist);
+        etHip=view.findViewById(R.id.ethip);
+        etNeck=view.findViewById(R.id.etneck);
         calcbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float height=Float.valueOf(etHeight.getText().toString());
-                float weight=Float.valueOf(etWeight.getText().toString());
-                float waist=Float.valueOf(etWaist.getText().toString());
-                float hip=Float.valueOf(etHip.getText().toString());
-                float neck=Float.valueOf(etNeck.getText().toString());
-                calcTv.setText(Float.toString(height)+" "+Float.toString(waist));
-                boolean inserted=dbHandler.insertData(height,weight,waist,hip,neck);
-                if(inserted){
-                    calcTv.setText("yeah");
-                }else {calcTv.setText("nooo");}
+                updateBodyInfo();
             }
         });
         loadEditTexts();
     }
 
+    void updateBodyInfo() {
+        float height = Float.valueOf(etHeight.getText().toString());
+        float weight = Float.valueOf(etWeight.getText().toString());
+        float waist = Float.valueOf(etWaist.getText().toString());
+        float hip = Float.valueOf(etHip.getText().toString());
+        float neck = Float.valueOf(etNeck.getText().toString());
+        calcTv.setText(Float.toString(height) + " " + Float.toString(waist));
+        boolean inserted = dbHandler.insertData(height, weight, waist, hip, neck);
+        if (inserted) {
+            calcTv.setText("yeah");
+        } else {
+            calcTv.setText("nooo");
+        }
+    }
+
     void loadEditTexts(){
-        Cursor cursor= dbHandler.getAllData();
+        Cursor cursor= dbHandler.getUpToDateBodyInformations();
         if(cursor.getCount()==0){
             return;
         }
+
         if(cursor.moveToFirst()) {
             float height = cursor.getFloat(cursor.getColumnIndex(DBHandler.COL_HEIGHT));
             float weight = cursor.getFloat(cursor.getColumnIndex("Weight"));

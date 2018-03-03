@@ -69,6 +69,7 @@ public class ExerscisesFragment extends Fragment {
             }
             recyclerView.setAdapter(new MyexercisegridItemRecyclerViewAdapter(DummyContent3.ITEMS, mListener));
         }
+        getActivity().setTitle("Exercises");
         return view;
     }
 

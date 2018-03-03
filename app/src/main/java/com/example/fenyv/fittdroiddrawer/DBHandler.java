@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +15,7 @@ import java.util.Date;
 
 public class DBHandler extends SQLiteOpenHelper {
     public static final String DATABASE_NAME="FittDroid.db";
-    public static final String TABLE_NAME="Statistics";
+    public static final String STATISTICS_TABLE ="Statistics";
     public static final String COL_DATE="Date";
     public static final String COL_HEIGHT="Height";
     public static final String COL_WEIGHT="Weight";
@@ -37,7 +35,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE "+ TABLE_NAME+"("+
+        db.execSQL("CREATE TABLE "+ STATISTICS_TABLE +"("+
                 COL_DATE+" DATE  PRIMARY KEY,"+
                 COL_HEIGHT+" FLOAT,"+
                 COL_WEIGHT+" FLOAT,"+
@@ -48,7 +46,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-        db.execSQL("CREATE TABLE  "+ TABLE_NAME+"("+
+        db.execSQL("CREATE TABLE  "+ STATISTICS_TABLE +"("+
                 COL_DATE+" DATE  PRIMARY KEY,"+
                 COL_HEIGHT+" FLOAT,"+
                 COL_WEIGHT+" FLOAT,"+
@@ -64,14 +62,14 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-        db.delete(TABLE_NAME,"Date='"+date+"'",null);
+        db.delete(STATISTICS_TABLE,"Date='"+date+"'",null);
         contentValues.put(COL_DATE,date);
         contentValues.put(COL_HEIGHT,height);
         contentValues.put(COL_WEIGHT,weight);
         contentValues.put(COL_WAIST,weight);
         contentValues.put(COL_HIP,hip);
         contentValues.put(COL_NECK,neck);
-        long result=db.insert(TABLE_NAME,null,contentValues);
+        long result=db.insert(STATISTICS_TABLE,null,contentValues);
         if(result==-1){
             return  false;
         }
@@ -79,9 +77,17 @@ public class DBHandler extends SQLiteOpenHelper {
         return true;
     }
 
-    public Cursor getAllData(){
+    public Cursor getUpToDateBodyInformations(){
         SQLiteDatabase db=this.getWritableDatabase();
-        Cursor res=db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE Date='"+"2018-03-03'",null);
+        Cursor res=db.rawQuery("SELECT * FROM "+ STATISTICS_TABLE +" WHERE Date=(SELECT max(Date) from "+ STATISTICS_TABLE +")",null);
         return  res;
     }
+
+    public Cursor getAllBodyInformation(){
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor res=db.rawQuery("SELECT * FROM "+ STATISTICS_TABLE,null);
+        return  res;
+    }
+
+
 }
