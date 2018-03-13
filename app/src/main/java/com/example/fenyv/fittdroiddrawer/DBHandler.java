@@ -56,9 +56,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     }
 
-    public boolean insertData(float height, float weight,float hip,float waist,float neck){
-
-
+    public boolean insertData(float height, float weight,float waist,float hip,float neck){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -66,7 +64,7 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(COL_DATE,date);
         contentValues.put(COL_HEIGHT,height);
         contentValues.put(COL_WEIGHT,weight);
-        contentValues.put(COL_WAIST,weight);
+        contentValues.put(COL_WAIST,waist);
         contentValues.put(COL_HIP,hip);
         contentValues.put(COL_NECK,neck);
         long result=db.insert(STATISTICS_TABLE,null,contentValues);

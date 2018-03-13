@@ -43,8 +43,7 @@ public class statistics_menu extends Fragment {
         if (cursor.getCount() == 0) {
             return;
         }
-        for (int i = 0; i < 3; i++) {
-            if (cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
                 float height = cursor.getFloat(cursor.getColumnIndex(DBHandler.COL_HEIGHT));
                 String date = cursor.getString(cursor.getColumnIndex("Date"));
                 float weight = cursor.getFloat(cursor.getColumnIndex("Weight"));
@@ -59,7 +58,7 @@ public class statistics_menu extends Fragment {
                 statisticstv.append(Float.toString(hip) + " ");
                 statisticstv.append(Float.toString(neck) + " ");
                 statisticstv.append("\n");
-            }
+
         }
     }
 
