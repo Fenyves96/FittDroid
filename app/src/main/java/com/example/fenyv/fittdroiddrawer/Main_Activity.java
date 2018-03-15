@@ -26,11 +26,13 @@ import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3;
 import java.util.ArrayList;
 import java.util.List;
 
-public class myworkouts_activity extends AppCompatActivity
+public class Main_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
         ,myworkoutsFragment.OnListFragmentInteractionListener,WorkoutsFragment.OnListFragmentInteractionListener
         ,ExerscisesFragment.OnListFragmentInteractionListener{
 
+    boolean mainMenuOpened=false;
+    NavigationView navigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class myworkouts_activity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         navigationView.getMenu().getItem(0).setChecked(true);
@@ -58,7 +60,13 @@ public class myworkouts_activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
+            return;
+        }
+        if(!mainMenuOpened){
+            displaySelectedScreen(R.id.nav_myworkouts);
+            navigationView.getMenu().getItem(0).setChecked(true);
+        }
+        else {
             super.onBackPressed();
         }
     }
@@ -119,18 +127,22 @@ public class myworkouts_activity extends AppCompatActivity
         switch (itemId) {
             case R.id.nav_myworkouts:
                 fragment = new myworkoutsFragment();
+                mainMenuOpened=true;
                 break;
             case R.id.nav_workouts:
                 fragment = new WorkoutsFragment();
+                mainMenuOpened=false;
                 break;
             case R.id.nav_statistics:
                 fragment = new statistics_menu();
+                mainMenuOpened=false;
                 break;
             case R.id.nav_body:
                 fragment = new body_menu();
+                mainMenuOpened=false;
                 break;
             case R.id.nav_exercises:
-
+                mainMenuOpened=false;
                 fragment=new ExerscisesFragment();
                 break;
 
