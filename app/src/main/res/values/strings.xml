@@ -17,4 +17,6 @@
     <string name="female">female</string>
     <string name="male">male</string>
     <string name="calc">Calculate</string>
+    <string name="SignedOut">Signed Out</string>
+    <string name="unsuccesfullSignOut">Unsuccesfull Sign Out</string>
 </resources>

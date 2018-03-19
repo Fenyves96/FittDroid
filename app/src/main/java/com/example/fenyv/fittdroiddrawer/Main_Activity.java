@@ -60,6 +60,25 @@ public class Main_Activity extends AppCompatActivity
     //Google Sign In stuffs
     private static int RC_SIGN_IN = 1;
     private static String TAG = "message";
+
+    public String getPersonPhotoUrl() {
+        SharedPreferences settings;
+        settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
+
+        //get the sharepref
+        personPhotoUrl = settings.getString("photoUri", "empty");
+        return personPhotoUrl;
+    }
+
+    public void setPersonPhotoUrl(String personPhotoUrl) {
+        SharedPreferences settings;
+        settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
+        //set the sharedpref
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("photoUri", personPhotoUrl);
+        editor.apply();
+    }
+
     String personPhotoUrl;
     GoogleSignInClient mGoogleSignInClient;
     private ImageView profilePicture;
@@ -120,6 +139,7 @@ public class Main_Activity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        loadPersonPhotoUrlSharedP();
         getMenuInflater().inflate(R.menu.myworkouts, menu);
         nameTv=findViewById(R.id.nameTv);
         emailTv=findViewById(R.id.emailTv);
@@ -128,6 +148,7 @@ public class Main_Activity extends AppCompatActivity
         findViewById(R.id.nameTv).setOnClickListener(this);
         findViewById(R.id.profile_picture_imageView).setOnClickListener(this);
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
         updateUI(account);
         return true;
     }
@@ -202,6 +223,7 @@ public class Main_Activity extends AppCompatActivity
 
             case R.id.nav_logout:
                 signOut();
+                Toast.makeText(this, R.string.SignedOut, Toast.LENGTH_SHORT).show();
                 break;
 
 
@@ -237,13 +259,16 @@ public class Main_Activity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.nameTv:
+                signOut();
                 signIn();
                 break;
 
             case R.id.emailTv:
+                signOut();
                 signIn();
                 break;
             case R.id.profile_picture_imageView:
+                signOut();
                 signIn();
                 break;
         }
@@ -253,17 +278,21 @@ public class Main_Activity extends AppCompatActivity
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
-
     }
 
     private void signOut() {
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                    }
-                });
-        updateUI(null);
+        try {
+            mGoogleSignInClient.signOut()
+                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                        }
+                    });
+            updateUI(null);
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, R.string.unsuccesfullSignOut, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -300,15 +329,17 @@ public class Main_Activity extends AppCompatActivity
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
+            savePersonPhotoUrlSharedP();
             // Signed in successfully, show authenticated UI.
-            updateUI(account);
             try {
-                personPhotoUrl = account.getPhotoUrl().toString();
-                insertProfilePicture(personPhotoUrl);
+                setPersonPhotoUrl(account.getPhotoUrl().toString());
+                insertProfilePicture(getPersonPhotoUrl());
             } catch (Exception e) {
-                personPhotoUrl="empty";
+                setPersonPhotoUrl("empty");
             }
+
+            updateUI(account);
+
 
         } catch (ApiException e) {
             // The ApiException status code indicates the detailed failure reason.
@@ -331,6 +362,7 @@ public class Main_Activity extends AppCompatActivity
             profilePicture.setImageResource(R.mipmap.ic_launcher_round);
 
         } else {
+            insertProfilePicture(getPersonPhotoUrl());
             emailTv.setText(account.getEmail());
             nameTv.setText(account.getDisplayName());
         }
@@ -340,7 +372,6 @@ public class Main_Activity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         savePersonPhotoUrlSharedP();
-
     }
 
 
@@ -353,21 +384,25 @@ public class Main_Activity extends AppCompatActivity
         editor.apply();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    void loadPersonPhotoUrlSharedP(){
         SharedPreferences settings;
         settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
 
         //get the sharepref
         personPhotoUrl = settings.getString("photoUri", "empty");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadPersonPhotoUrlSharedP();
         if(personPhotoUrl.equals("empty"))
             return;
         try {
-          // insertProfilePicture(personPhotoUrl);
+           insertProfilePicture(personPhotoUrl);
         } catch (Exception e) {
             if (e instanceof java.lang.NullPointerException) {
-                Toast.makeText(this, "no image", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
             } else e.printStackTrace();
         }
     }
