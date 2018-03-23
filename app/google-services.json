@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "459403664713",
+    "project_id": "firebase-fittdroid"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459403664713:android:51003f63a073c5f5",
+        "android_client_info": {
+          "package_name": "com.example.fenyv.fittdroiddrawer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459403664713-dvnl5aljpkgu28636ubdmcc12qem4ft6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fenyv.fittdroiddrawer",
+            "certificate_hash": "fd0552be33eafff4290aa9aeebc0d5365147b73e"
+          }
+        },
+        {
+          "client_id": "459403664713-at64jc06eni7vt1tims8gfd1ofqmnr41.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXgIqteMVU3XE1aTxzMVNck5WtjCRCzI8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
