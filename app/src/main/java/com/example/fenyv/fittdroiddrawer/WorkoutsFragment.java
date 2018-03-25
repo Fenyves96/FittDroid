@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2.DummyItem;
 
-import java.util.List;
-
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -69,7 +67,7 @@ public class WorkoutsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyWorkoutsRecyclerViewAdapter(DummyContent2.ITEMS, mListener));
+            recyclerView.setAdapter(new WorkoutsRecyclerViewAdapter(DummyContent2.ITEMS, mListener));
         }
         getActivity().setTitle("Workouts");
         return view;

@@ -67,7 +67,7 @@ public class ExerscisesFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyexercisegridItemRecyclerViewAdapter(DummyContent3.ITEMS, mListener));
+            recyclerView.setAdapter(new ExercisegridItemRecyclerViewAdapter(DummyContent3.ITEMS, mListener));
         }
         getActivity().setTitle("Exercises");
         return view;

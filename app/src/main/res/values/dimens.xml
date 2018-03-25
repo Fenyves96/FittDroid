@@ -9,4 +9,5 @@
     <dimen name="text_margin">16dp</dimen>
     <dimen name="default_textsize">12sp</dimen>
     <dimen name="bodylinearlayoutwidth">180sp</dimen>
+    <dimen name="textsize_title">30sp</dimen>
 </resources>

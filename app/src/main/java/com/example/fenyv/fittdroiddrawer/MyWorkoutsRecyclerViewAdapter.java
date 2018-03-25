@@ -1,13 +1,16 @@
 package com.example.fenyv.fittdroiddrawer;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.fenyv.fittdroiddrawer.WorkoutsFragment.OnListFragmentInteractionListener;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2.DummyItem;
+import com.example.fenyv.fittdroiddrawer.myworkoutsFragment.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_workouts2, parent, false);
+                .inflate(R.layout.fragment_myworkouts2, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,6 +46,7 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
+
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);

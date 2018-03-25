@@ -1,5 +1,7 @@
 package com.example.fenyv.fittdroiddrawer.dummy;
 
+import com.example.fenyv.fittdroiddrawer.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,11 +59,13 @@ public class DummyContent3 {
         public final String id;
         public final String content;
         public final String details;
+        public int resource;
 
         public DummyItem(String id, String content, String details) {
             this.id = id;
             this.content = content;
             this.details = details;
+            resource= R.mipmap.ic_exercises;
         }
 
         @Override

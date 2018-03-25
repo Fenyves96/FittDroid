@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.fenyv.fittdroiddrawer.ExerscisesFragment.OnListFragmentInteractionListener;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3.DummyItem;
+import com.example.fenyv.fittdroiddrawer.WorkoutsFragment.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2.DummyItem;
 
 import java.util.List;
 
@@ -16,12 +16,12 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyexercisegridItemRecyclerViewAdapter extends RecyclerView.Adapter<MyexercisegridItemRecyclerViewAdapter.ViewHolder> {
+public class WorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<WorkoutsRecyclerViewAdapter.ViewHolder> {
 
     private final List<DummyItem> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyexercisegridItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public WorkoutsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -29,7 +29,7 @@ public class MyexercisegridItemRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_exercisegriditem, parent, false);
+                .inflate(R.layout.fragment_workouts2, parent, false);
         return new ViewHolder(view);
     }
 
