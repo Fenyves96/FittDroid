@@ -33,13 +33,22 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignInResult;
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,39 +56,15 @@ import java.util.List;
 public class Main_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
         ,myworkoutsFragment.OnListFragmentInteractionListener,WorkoutsFragment.OnListFragmentInteractionListener
-        ,ExerscisesFragment.OnListFragmentInteractionListener,View.OnClickListener{
+        ,ExerscisesFragment.OnListFragmentInteractionListener,View.OnClickListener{  //impelement onconnectionfailed
 
     boolean mainMenuOpened=false;
     NavigationView navigationView;
 
-    public Activity getActivity(){
-        return this;
-    }
-
     //Google Sign In stuffs
-    private static int RC_SIGN_IN = 1;
-    private static String TAG = "message";
+    private SignInController signInController;
 
-    public String getPersonPhotoUrl() {
-        SharedPreferences settings;
-        settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
 
-        //get the sharepref
-        personPhotoUrl = settings.getString("photoUri", "empty");
-        return personPhotoUrl;
-    }
-
-    public void setPersonPhotoUrl(String personPhotoUrl) {
-        SharedPreferences settings;
-        settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
-        //set the sharedpref
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("photoUri", personPhotoUrl);
-        editor.apply();
-    }
-
-    String personPhotoUrl;
-    GoogleSignInClient mGoogleSignInClient;
     private ImageView profilePicture;
     TextView nameTv;
     TextView emailTv;
@@ -102,21 +87,11 @@ public class Main_Activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.getMenu().getItem(0).setChecked(true);
         displaySelectedScreen(R.id.nav_myworkouts);
-
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        // Build a GoogleSignInClient with the options specified by gso.
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-
-
-        // Build a GoogleSignInClient with the options specified by gso.
-        //
+        signInController=new SignInController(this);
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -135,7 +110,13 @@ public class Main_Activity extends AppCompatActivity
             }
         }
         else {
-            getSupportFragmentManager().popBackStack();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            if (drawer.isDrawerOpen(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+                return;
+            }
+             getSupportFragmentManager().popBackStack();
+
         }
 
     }
@@ -144,17 +125,19 @@ public class Main_Activity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        loadPersonPhotoUrlSharedP();
+        signInController=new SignInController(this);
+        signInController.loadPersonPhotoUrlSharedP();
         getMenuInflater().inflate(R.menu.myworkouts, menu);
-        nameTv=findViewById(R.id.nameTv);
-        emailTv=findViewById(R.id.emailTv);
+
         profilePicture = findViewById(R.id.profile_picture_imageView);
+        emailTv=findViewById(R.id.emailTv);
+        nameTv=findViewById(R.id.nameTv);
+        signInController.initialize(profilePicture);
+        emailTv.setText(signInController.getAcc_email());
+        nameTv.setText(signInController.getAcc_name());
         findViewById(R.id.emailTv).setOnClickListener(this);
         findViewById(R.id.nameTv).setOnClickListener(this);
         findViewById(R.id.profile_picture_imageView).setOnClickListener(this);
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
-
-        updateUI(account);
         return true;
     }
 
@@ -227,7 +210,7 @@ public class Main_Activity extends AppCompatActivity
                 break;
 
             case R.id.nav_logout:
-                signOut();
+                signInController.signOut();
                 Toast.makeText(this, R.string.SignedOut, Toast.LENGTH_SHORT).show();
                 break;
 
@@ -264,156 +247,55 @@ public class Main_Activity extends AppCompatActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.nameTv:
-                signOut();
-                signIn();
+                signInController.signOut();
+                signInController.signIn();
                 break;
 
             case R.id.emailTv:
-                signOut();
-                signIn();
+                signInController.signOut();
+                signInController.signIn();
                 break;
             case R.id.profile_picture_imageView:
-                signOut();
-                signIn();
+                signInController.signOut();
+                signInController.signIn();
                 break;
         }
     }
 
     //---------------------------------------------Google Sign In---------------------------------//
-    private void signIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
 
-    private void signOut() {
-        try {
-            mGoogleSignInClient.signOut()
-                    .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                        }
-                    });
-            updateUI(null);
-        }catch (Exception e){
-            e.printStackTrace();
-            Toast.makeText(this, R.string.unsuccesfullSignOut, Toast.LENGTH_SHORT).show();
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        signInController.onResult(requestCode,data);
         // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
-        if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
+
     }
 
-    void insertProfilePicture(String url){
-        if(url.equals("empty")){
-            profilePicture.setImageResource(R.mipmap.ic_launcher_round);
-
-        }else {
-
-            Glide.with(getApplicationContext()).load(url).asBitmap().fitCenter().into(new BitmapImageViewTarget(profilePicture) {
-                @Override
-                protected void setResource(Bitmap resource) {
-                    RoundedBitmapDrawable circularBitmapDrawable =
-                            RoundedBitmapDrawableFactory.create(getApplicationContext().getResources(), resource);
-                    circularBitmapDrawable.setCircular(true);
-                    profilePicture.setImageDrawable(circularBitmapDrawable);
-                }
-            });
-        }
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            savePersonPhotoUrlSharedP();
-            // Signed in successfully, show authenticated UI.
-            try {
-                setPersonPhotoUrl(account.getPhotoUrl().toString());
-                insertProfilePicture(getPersonPhotoUrl());
-            } catch (Exception e) {
-                setPersonPhotoUrl("empty");
-            }
-
-            updateUI(account);
-
-
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            profilePicture.setImageResource(R.mipmap.ic_launcher_round);
-        }
-
-
-        savePersonPhotoUrlSharedP();
-    }
-
-
-
-
-    void updateUI(GoogleSignInAccount account) {
-        if (account == null) {
-            nameTv.setText("Nincs bejelntkezve");
-            emailTv.setText("");
-            profilePicture.setImageResource(R.mipmap.ic_launcher_round);
-
-        } else {
-            insertProfilePicture(getPersonPhotoUrl());
-            emailTv.setText(account.getEmail());
-            nameTv.setText(account.getDisplayName());
-        }
-    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        savePersonPhotoUrlSharedP();
-    }
-
-
-    void savePersonPhotoUrlSharedP(){
-        SharedPreferences settings;
-        settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
-        //set the sharedpref
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("photoUri", personPhotoUrl);
-        editor.apply();
-    }
-
-    void loadPersonPhotoUrlSharedP(){
-        SharedPreferences settings;
-        settings = getSharedPreferences("savephoto", Context.MODE_PRIVATE);
-
-        //get the sharepref
-        personPhotoUrl = settings.getString("photoUri", "empty");
+        signInController.savePersonPhotoUrlSharedP();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadPersonPhotoUrlSharedP();
-        if(personPhotoUrl.equals("empty"))
-            return;
-        try {
-           insertProfilePicture(personPhotoUrl);
-        } catch (Exception e) {
-            if (e instanceof java.lang.NullPointerException) {
-                e.printStackTrace();
-            } else e.printStackTrace();
-        }
+        signInController.Resume();
     }
 
-
-
-
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //signInController.addAuthStateListener();
+    }
+    //----------------------------------------------------------------------------------------------------------------------Firebase
+    @Override
+    protected void onStop() {
+        super.onStop();
+        signInController.removeAuthStateListener();
+    }
 
 }
