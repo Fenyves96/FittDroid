@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "459403664713",
-    "project_id": "firebase-fittdroid"
+    "firebase_url": "https://fir-fittdroid.firebaseio.com",
+    "project_id": "firebase-fittdroid",
+    "storage_bucket": "firebase-fittdroid.appspot.com"
   },
   "client": [
     {
@@ -12,6 +14,10 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "459403664713-jqfeg1bondfoivpqk18i0gq3l0ccg8np.apps.googleusercontent.com",
+          "client_type": 3
+        },
         {
           "client_id": "459403664713-dvnl5aljpkgu28636ubdmcc12qem4ft6.apps.googleusercontent.com",
           "client_type": 1,
@@ -35,11 +41,16 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459403664713-jqfeg1bondfoivpqk18i0gq3l0ccg8np.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

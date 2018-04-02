@@ -1,20 +1,12 @@
 package com.example.fenyv.fittdroiddrawer;
 
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,30 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Main_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener
@@ -125,19 +97,19 @@ public class Main_Activity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        signInController=new SignInController(this);
-        signInController.loadPersonPhotoUrlSharedP();
         getMenuInflater().inflate(R.menu.myworkouts, menu);
-
+        signInController=new SignInController(this);
         profilePicture = findViewById(R.id.profile_picture_imageView);
         emailTv=findViewById(R.id.emailTv);
         nameTv=findViewById(R.id.nameTv);
         signInController.initialize(profilePicture);
         emailTv.setText(signInController.getAcc_email());
+        //TODO:database.getReference(signInController.get)
         nameTv.setText(signInController.getAcc_name());
         findViewById(R.id.emailTv).setOnClickListener(this);
         findViewById(R.id.nameTv).setOnClickListener(this);
         findViewById(R.id.profile_picture_imageView).setOnClickListener(this);
+        Toast.makeText(this, signInController.getAcc_id(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -283,12 +255,14 @@ public class Main_Activity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        signInController.Resume();
+        profilePicture = findViewById(R.id.profile_picture_imageView);
+        signInController.resume();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        signInController=new SignInController(this);
         //signInController.addAuthStateListener();
     }
     //----------------------------------------------------------------------------------------------------------------------Firebase

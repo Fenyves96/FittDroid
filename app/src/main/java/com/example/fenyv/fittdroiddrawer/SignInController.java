@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -30,6 +31,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by fenyv on 2018. 03. 30..
@@ -47,6 +50,12 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
     }
 
     String acc_name;
+
+    public String getAcc_id() {
+        return acc_id;
+    }
+
+    public static String acc_id;
 
     public String getAcc_email() {
         return acc_email;
@@ -77,6 +86,8 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
 
     public SignInController(AppCompatActivity activity){
         this.activity=activity;
+        loadUserIDSharedP();
+        loadPersonPhotoUrlSharedP();
     }
 
 
@@ -146,14 +157,21 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
             Toast.makeText(activity, R.string.unsuccesfullSignOut, Toast.LENGTH_SHORT).show();
         }
 
+
+
         //----------------------------------------------------------------------------------------------------------------------Firebase
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(final GoogleSignInAccount account) {
         AuthCredential credential= GoogleAuthProvider.getCredential(account.getIdToken(),null);
         mAuth.signInWithCredential(credential).addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
+                FirebaseDatabase database= FirebaseDatabase.getInstance();
+                setUserIDSharedP(account.getId());
+                DatabaseReference ref=database.getReference(account.getId()+"/Datas");
+                ref.child("email").setValue(account.getEmail());
+                ref.child("name").setValue(account.getDisplayName());
                 Log.d("AUTH","SignInTithCredintalComplete"+task.isSuccessful());
             }
         });
@@ -195,12 +213,11 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
         }
     }
 
-    void Resume(){
-        loadPersonPhotoUrlSharedP();
-        if(personPhotoUrl.equals("empty"))
+    void resume(){
+        if(personPhotoUrl.equals("empty") &&personPhotoUrl==null)
             return;
         try {
-            insertProfilePicture(personPhotoUrl);
+            //insertProfilePicture(personPhotoUrl);
         } catch (Exception e) {
             if (e instanceof java.lang.NullPointerException) {
                 e.printStackTrace();
@@ -212,8 +229,11 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             savePersonPhotoUrlSharedP();
+            saveUserIDSharedP();
             // Signed in successfully, show authenticated UI.
             try {
+                setUserIDSharedP(account.getId());
+                setPersonPhotoUrl(account.getId());
                 setPersonPhotoUrl(account.getPhotoUrl().toString());
                 insertProfilePicture(getPersonPhotoUrl());
             } catch (Exception e) {
@@ -229,8 +249,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
             profilePicture.setImageResource(R.mipmap.ic_launcher_round);
         }
-
-
+        saveUserIDSharedP();
         savePersonPhotoUrlSharedP();
     }
 
@@ -244,8 +263,36 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
             insertProfilePicture(getPersonPhotoUrl());
             acc_email =account.getEmail();
             acc_name =account.getDisplayName();
+            setUserIDSharedP(account.getId());
         }
     }
+    void setUserIDSharedP(String userID){
+        acc_id=userID;
+        SharedPreferences settings;
+        settings = activity.getSharedPreferences("saveuserID", Context.MODE_PRIVATE);
+        //set the sharedpref
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userID", acc_id);
+        editor.apply();
+    }
+
+    void saveUserIDSharedP(){
+        SharedPreferences settings;
+        settings = activity.getSharedPreferences("saveuserID", Context.MODE_PRIVATE);
+        //set the sharedpref
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("userID", acc_id);
+        editor.apply();
+    }
+
+    void loadUserIDSharedP(){
+        SharedPreferences settings;
+        settings = activity.getSharedPreferences("saveuserID", Context.MODE_PRIVATE);
+
+        //get the sharepref
+        acc_id = settings.getString("userID", "empty");
+    }
+
 
     void savePersonPhotoUrlSharedP(){
         SharedPreferences settings;
