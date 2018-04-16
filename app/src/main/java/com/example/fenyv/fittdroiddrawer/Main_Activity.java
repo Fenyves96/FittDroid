@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Main_Activity extends AppCompatActivity
@@ -47,6 +48,11 @@ public class Main_Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Set Layout Properties
+        FirebaseDatabase database=FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+        myRef.keepSynced(true);
+
+        myRef.keepSynced(true);
         setContentView(R.layout.activity_myworkouts_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -194,6 +200,7 @@ public class Main_Activity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
             ft.commit();
+            //parapapapa
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

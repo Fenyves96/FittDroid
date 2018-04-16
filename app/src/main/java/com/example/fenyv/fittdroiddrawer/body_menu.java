@@ -71,6 +71,7 @@ public class body_menu extends Fragment {
        // ------------------------------------------------------------Firebase
         database=FirebaseDatabase.getInstance();
 
+
             loadEditTexts();
 
     }
@@ -234,6 +235,7 @@ public class body_menu extends Fragment {
             etNeck.setText("");
 
        DatabaseReference myRef = database.getReference();
+       myRef.keepSynced(true);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
