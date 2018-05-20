@@ -34,6 +34,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 /**
  * Created by fenyv on 2018. 03. 30..
  */
@@ -205,6 +207,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             if(result.isSuccess()){
                 GoogleSignInAccount account=result.getSignInAccount();
+                assert account != null;
                 firebaseAuthWithGoogle(account);
             }else
                 Toast.makeText(activity, "Google login failed", Toast.LENGTH_SHORT).show();
@@ -234,7 +237,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
             try {
                 setUserIDSharedP(account.getId());
                 setPersonPhotoUrl(account.getId());
-                setPersonPhotoUrl(account.getPhotoUrl().toString());
+                setPersonPhotoUrl(Objects.requireNonNull(account.getPhotoUrl()).toString());
                 insertProfilePicture(getPersonPhotoUrl());
             } catch (Exception e) {
                 setPersonPhotoUrl("empty");
@@ -262,7 +265,9 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
         } else {
             insertProfilePicture(getPersonPhotoUrl());
             acc_email =account.getEmail();
+            Toast.makeText(activity, acc_email, Toast.LENGTH_SHORT).show();
             acc_name =account.getDisplayName();
+            ((Main_Activity)activity).updateUserInfo();
             setUserIDSharedP(account.getId());
         }
     }

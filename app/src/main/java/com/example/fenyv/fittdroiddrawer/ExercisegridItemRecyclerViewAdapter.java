@@ -23,10 +23,10 @@ import java.util.List;
  */
 public class ExercisegridItemRecyclerViewAdapter extends RecyclerView.Adapter<ExercisegridItemRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Exercise> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public ExercisegridItemRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public ExercisegridItemRecyclerViewAdapter(List<Exercise> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -42,14 +42,14 @@ public class ExercisegridItemRecyclerViewAdapter extends RecyclerView.Adapter<Ex
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
        // holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mContentView.setText(mValues.get(position).content);
        // holder.mIdView.setVisibility(View.INVISIBLE);
         holder.mContentView.setBackgroundResource(R.drawable.bench_press);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    Fragment fragment = null;
+                    Fragment fragment;
                     fragment = new ExerciseDescriptionFragment();
                     if (fragment != null) {
                         AppCompatActivity activity = (AppCompatActivity) holder.mView.getContext();
@@ -58,7 +58,7 @@ public class ExercisegridItemRecyclerViewAdapter extends RecyclerView.Adapter<Ex
                     }
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                   // mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });
@@ -73,7 +73,7 @@ public class ExercisegridItemRecyclerViewAdapter extends RecyclerView.Adapter<Ex
         public final View mView;
        // public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Exercise mItem;
 
         public ViewHolder(View view) {
             super(view);

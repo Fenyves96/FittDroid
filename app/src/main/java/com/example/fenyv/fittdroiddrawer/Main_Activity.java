@@ -4,6 +4,7 @@ package com.example.fenyv.fittdroiddrawer;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
@@ -119,6 +120,12 @@ public class Main_Activity extends AppCompatActivity
         return true;
     }
 
+    public void updateUserInfo(){
+        emailTv.setText(signInController.getAcc_email());
+        //TODO:database.getReference(signInController.get)
+        nameTv.setText(signInController.getAcc_name());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -136,7 +143,7 @@ public class Main_Activity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
 //        int id = item.getItemId();
 //
