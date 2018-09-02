@@ -1,17 +1,17 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.RecycleViewAdapters;
 
-import android.media.Image;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.fenyv.fittdroiddrawer.ExerscisesFragment.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.Entities.Exercise;
+import com.example.fenyv.fittdroiddrawer.Fragments.ExerciseDescriptionFragment;
+import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.R;
 import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3.DummyItem;
 
 import java.util.List;
