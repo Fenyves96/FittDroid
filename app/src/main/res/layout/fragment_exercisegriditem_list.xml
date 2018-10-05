@@ -8,5 +8,5 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.fenyv.fittdroiddrawer.ExerscisesFragment"
+    tools:context="com.example.fenyv.fittdroiddrawer.Fragments.ExerscisesFragment"
     tools:listitem="@layout/fragment_exercisegriditem" />

@@ -21,16 +21,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3;
+import com.example.fenyv.fittdroiddrawer.Fragments.BodyFragment;
+import com.example.fenyv.fittdroiddrawer.Fragments.ExerscisesFragment;
+import com.example.fenyv.fittdroiddrawer.Fragments.MyWorkoutsFragment;
+import com.example.fenyv.fittdroiddrawer.Fragments.StatisticsFragment;
+import com.example.fenyv.fittdroiddrawer.Fragments.WorkoutsFragment;
+import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Main_Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener
-        ,myworkoutsFragment.OnListFragmentInteractionListener,WorkoutsFragment.OnListFragmentInteractionListener
-        ,ExerscisesFragment.OnListFragmentInteractionListener,View.OnClickListener{  //impelement onconnectionfailed
+        implements NavigationView.OnNavigationItemSelectedListener,OnListFragmentInteractionListener,View.OnClickListener{  //impelement onconnectionfailed
 
     boolean mainMenuOpened=false;
     NavigationView navigationView;
@@ -52,7 +53,6 @@ public class Main_Activity extends AppCompatActivity
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
         myRef.keepSynced(true);
-
         myRef.keepSynced(true);
         setContentView(R.layout.activity_myworkouts_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -110,20 +110,20 @@ public class Main_Activity extends AppCompatActivity
         emailTv=findViewById(R.id.emailTv);
         nameTv=findViewById(R.id.nameTv);
         signInController.initialize(profilePicture);
-        emailTv.setText(signInController.getAcc_email());
+        emailTv.setText(signInController.getmEmailAdress());
         //TODO:database.getReference(signInController.get)
-        nameTv.setText(signInController.getAcc_name());
+        nameTv.setText(signInController.getUsername());
         findViewById(R.id.emailTv).setOnClickListener(this);
         findViewById(R.id.nameTv).setOnClickListener(this);
         findViewById(R.id.profile_picture_imageView).setOnClickListener(this);
-        Toast.makeText(this, signInController.getAcc_id(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, signInController.getUserId(), Toast.LENGTH_SHORT).show();
         return true;
     }
 
     public void updateUserInfo(){
-        emailTv.setText(signInController.getAcc_email());
+        emailTv.setText(signInController.getmEmailAdress());
         //TODO:database.getReference(signInController.get)
-        nameTv.setText(signInController.getAcc_name());
+        nameTv.setText(signInController.getUsername());
     }
 
     @Override
@@ -174,7 +174,7 @@ public class Main_Activity extends AppCompatActivity
         //initializing the fragment object which is selected
         switch (itemId) {
             case R.id.nav_myworkouts:
-                fragment = new myworkoutsFragment();
+                fragment = new MyWorkoutsFragment();
                 mainMenuOpened=true;
                 break;
             case R.id.nav_workouts:
@@ -182,11 +182,11 @@ public class Main_Activity extends AppCompatActivity
                 mainMenuOpened=false;
                 break;
             case R.id.nav_statistics:
-                fragment = new statistics_menu();
+                fragment = new StatisticsFragment();
                 mainMenuOpened=false;
                 break;
             case R.id.nav_body:
-                fragment = new body_menu();
+                fragment = new BodyFragment();
                 mainMenuOpened=false;
                 break;
             case R.id.nav_exercises:
@@ -215,19 +215,9 @@ public class Main_Activity extends AppCompatActivity
     }
 
     //---------------------------------------------End Of Navigation---------------------------------//
-    @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
-    }
 
-    @Override
-    public void onListFragmentInteraction(DummyContent2.DummyItem item) {
 
-    }
-    @Override
-    public void onListFragmentInteraction(DummyContent3.DummyItem item) {
-
-    }
 
     @Override
     public void onClick(View view) {
@@ -286,4 +276,8 @@ public class Main_Activity extends AppCompatActivity
         signInController.removeAuthStateListener();
     }
 
+    @Override
+    public void onListFragmentInteraction(Object item) {
+
+    }
 }

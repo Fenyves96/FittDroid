@@ -15,10 +15,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "459403664713-jqfeg1bondfoivpqk18i0gq3l0ccg8np.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
           "client_id": "459403664713-dvnl5aljpkgu28636ubdmcc12qem4ft6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -27,7 +23,15 @@
           }
         },
         {
-          "client_id": "459403664713-at64jc06eni7vt1tims8gfd1ofqmnr41.apps.googleusercontent.com",
+          "client_id": "459403664713-dvsuumud4b4p4l6h4mqmdluu8fbnea9l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fenyv.fittdroiddrawer",
+            "certificate_hash": "c03ddf3458b1ce06c162a6a17f4cceac7deb286f"
+          }
+        },
+        {
+          "client_id": "459403664713-jqfeg1bondfoivpqk18i0gq3l0ccg8np.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

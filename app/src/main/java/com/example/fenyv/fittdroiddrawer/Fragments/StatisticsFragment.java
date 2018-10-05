@@ -1,4 +1,4 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.Fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,12 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.fenyv.fittdroiddrawer.DBHandler;
+import com.example.fenyv.fittdroiddrawer.R;
+
 /**
  * Created by Belal on 18/09/16.
  */
 
 
-public class statistics_menu extends Fragment {
+public class StatisticsFragment extends Fragment {
     DBHandler dbHandler;
     TextView statisticstv;
 

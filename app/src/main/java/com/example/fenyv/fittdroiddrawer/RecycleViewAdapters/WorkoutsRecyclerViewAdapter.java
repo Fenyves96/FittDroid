@@ -1,4 +1,4 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.RecycleViewAdapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,8 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.fenyv.fittdroiddrawer.WorkoutsFragment.OnListFragmentInteractionListener;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent2.DummyItem;
+import com.example.fenyv.fittdroiddrawer.Entities.Workout;
+import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.R;
 
 import java.util.List;
 
@@ -18,10 +19,10 @@ import java.util.List;
  */
 public class WorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<WorkoutsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Workout> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public WorkoutsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public WorkoutsRecyclerViewAdapter(List<Workout> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -36,8 +37,8 @@ public class WorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<WorkoutsRe
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mIdView.setText(mValues.get(position).id);
+        //holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +61,7 @@ public class WorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<WorkoutsRe
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Workout mItem;
 
         public ViewHolder(View view) {
             super(view);

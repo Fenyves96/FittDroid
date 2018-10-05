@@ -1,4 +1,4 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.Fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent.DummyItem;
+import com.example.fenyv.fittdroiddrawer.Contents.WorkoutContent;
+import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.R;
+import com.example.fenyv.fittdroiddrawer.RecycleViewAdapters.WorkoutsRecyclerViewAdapter;
 
 /**
  * A fragment representing a list of Items.
@@ -19,7 +21,7 @@ import com.example.fenyv.fittdroiddrawer.dummy.DummyContent.DummyItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class myworkoutsFragment extends Fragment {
+public class WorkoutsFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -31,13 +33,13 @@ public class myworkoutsFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public myworkoutsFragment() {
+    public WorkoutsFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static myworkoutsFragment newInstance(int columnCount) {
-        myworkoutsFragment fragment = new myworkoutsFragment();
+    public static WorkoutsFragment newInstance(int columnCount) {
+        WorkoutsFragment fragment = new WorkoutsFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -56,7 +58,7 @@ public class myworkoutsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_myworkouts_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_workouts_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -67,9 +69,9 @@ public class myworkoutsFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyWorkoutsRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new WorkoutsRecyclerViewAdapter(WorkoutContent.ITEMS, mListener));
         }
-        getActivity().setTitle("My Workouts");
+        getActivity().setTitle("Workouts");
         return view;
     }
 
@@ -101,8 +103,5 @@ public class myworkoutsFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
-    }
+
 }

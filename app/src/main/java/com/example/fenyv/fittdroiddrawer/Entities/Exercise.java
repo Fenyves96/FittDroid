@@ -1,16 +1,18 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.Entities;
 
-import java.util.Objects;
+import java.io.Serializable;
 
-public  class Exercise {
-        String description;
-        String imageUrl ="";
-        String name;
-        String muscle1;
-        String muscle2;
-        String muscle3;
+public  class Exercise implements Serializable {
+    private int id;
+    private String description="";
+    private String imageUrl ="";
+    private String name="";
+    private String muscle1="";
+    private String muscle2="";
+    private String muscle3="";
 
-        public Exercise(String name,String description,String muscle)
+    //region konstruktorok
+    public Exercise(String name,String description,String muscle)
         {
             this.name = name;
             this.description = description;
@@ -24,11 +26,16 @@ public  class Exercise {
             this.muscle1=muscle;
             this.imageUrl =imgageUrl;
         }
-
+        //NoSql adatbázis json-átalakításos cucc miatt van rá szükség
         public Exercise() {
 
         }
-        public void setImageUrl(String imageUrl) {
+    //endregion
+
+    //region setterek,getterek
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public void setImageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
         }
         public String getImageUrl() {
@@ -82,12 +89,14 @@ public  class Exercise {
         public void setMuscle3(String muscle3) {
             this.muscle3 = muscle3;
         }
+    //endregion
 
+    /**Két Exercise akkor egyenlő, ha egynlő az idjük. */
     @Override
     public boolean equals(Object obj) {
             if(obj.getClass()==this.getClass()){
                 Exercise exercise=(Exercise)obj;
-                return (((Exercise) obj).getImageUrl().equals(imageUrl) || ((Exercise) obj).getName().equals(name));
+                return ((Exercise) obj).getId()==(id);
             }
         return false;
     }

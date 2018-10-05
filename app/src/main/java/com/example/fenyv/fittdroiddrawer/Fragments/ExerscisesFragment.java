@@ -1,10 +1,12 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,18 +16,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent3.DummyItem;
+import com.bumptech.glide.Glide;
+import com.example.fenyv.fittdroiddrawer.Entities.Exercise;
+import com.example.fenyv.fittdroiddrawer.ExerciseDetailsActivity;
+import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.R;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,7 +59,7 @@ public class ExerscisesFragment extends Fragment {
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 2;
+    private int mColumnCount = 2; //hány oszlopban jelenjenek meg a gyakorlatok
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -101,7 +111,10 @@ public class ExerscisesFragment extends Fragment {
         getActivity().setTitle("Exercises");
         return view;
     }
-
+    /**
+    * Összeszedjük az összes gyakorlatot az adatbázisból és itt kezeljük le,
+     * hogy mi történjen, ha bármiféle módosítás történne az adatbázisban.
+    */
     void getDataFromDataBase(){
 //        Map<String, Exercise> exerciseMap = new HashMap<>();
 //        exerciseMap.put("bench press3",new Exercise("benchpress","description","biceps"));
@@ -110,17 +123,17 @@ public class ExerscisesFragment extends Fragment {
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Exercise exercise=new Exercise();
+                Exercise exercise;
                 exercise=dataSnapshot.getValue(Exercise.class);
                 if(exercise!=null)
-                    Toast.makeText(getContext(), exercise.toString(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), exercise.toString(), Toast.LENGTH_SHORT).show();
                 exercises.add(exercise);
                 recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Exercise exercise=new Exercise();
+                Exercise exercise;
                 exercise=dataSnapshot.getValue(Exercise.class);
                 exercises.remove(exercise);
                 exercises.add(exercise);
@@ -129,9 +142,9 @@ public class ExerscisesFragment extends Fragment {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Exercise exercise=new Exercise();
+                Exercise exercise;
                 exercise=dataSnapshot.getValue(Exercise.class);
-                Toast.makeText(getContext(), dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
                 exercises.remove(exercise);
                 recyclerView.setAdapter(adapter);
             }
@@ -148,7 +161,7 @@ public class ExerscisesFragment extends Fragment {
         });
     }
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////
+    //region ExerciseAdapter
     public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>
     {
         List<Exercise> exercises;
@@ -176,7 +189,10 @@ public class ExerscisesFragment extends Fragment {
             holder.exercise=exercises.get(position);
             holder.exerciseName.setText(holder.exercise.getName());
             if(holder.exercise!=null){
-                    new ImageLoadAsync(holder).execute(holder.exercise.getImageUrl());
+
+                    new ImageLoadAsync(holder).execute(holder.exercise.getImageUrl()); //képek betöltése
+                GetUrlForImage("");
+                //Toast.makeText(getContext(), GetUrlForImage(""), Toast.LENGTH_SHORT).show();
             }
             else{
             holder.exerciseName.setBackgroundResource(R.drawable.bench_press);}
@@ -184,24 +200,62 @@ public class ExerscisesFragment extends Fragment {
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), holder.exerciseName.getText(), Toast.LENGTH_SHORT).show();
+                    loadExercise(holder.exercise);
+                    //Toast.makeText(v.getContext(), holder.exerciseName.getText(), Toast.LENGTH_SHORT).show();
             }
 
 });
         }
 
+        private void loadExercise(Exercise exercise)
+        {
+//            ExerciseDescriptionFragment fragment=new ExerciseDescriptionFragment();
+//            fragment.setExercise(exercise);
+//            FragmentManager fragmentManager=getFragmentManager();
+//            FragmentTransaction fragmentTransaction=fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.content_frame,fragment,null)
+//                    .addToBackStack(null).commit();
+//            Toast.makeText(getContext(), exercise.getImageUrl(), Toast.LENGTH_SHORT).show();
+            Intent myIntent = new Intent(getActivity(), ExerciseDetailsActivity.class);
+            myIntent.putExtra("exercise",exercise);
+//            myIntent.putExtra("exerciseName",exercise.getName());
+//            myIntent.putExtra("exerciseMuscle1",exercise.getMuscle1());
+//            myIntent.putExtra("exerciseMuscle2",exercise.getMuscle2());
+//            myIntent.putExtra("exerciseMuscle3",exercise.getMuscle3());
+            //TODO: Ha lesz muscle3, akkor azt is adjuk át
+//            myIntent.putExtra("exerciseDescription",exercise.getDescription());
+            getActivity().startActivity(myIntent);
+        }
+
+
         public class ExerciseViewHolder extends RecyclerView.ViewHolder{
             TextView exerciseName;
+            ImageView exerciseImage;
             Exercise exercise;
             public final View mView;
             public ExerciseViewHolder(View itemView){
                 super(itemView);
                 mView=itemView;
                 exerciseName=itemView.findViewById(R.id.content);
+                exerciseImage=itemView.findViewById(R.id.exercise_imageInExercisesFragment);
             }
         }
     }
-    //////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private void GetUrlForImage(String name) {
+        // Reference to an image file in Cloud Storage
+        StorageReference storageReference=FirebaseStorage.getInstance().getReference();
+        StorageReference pathref= storageReference.child("Exercises/18-10.jpg");
+        pathref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+                //new ImageLoadAsync(holder).execute(holder.exercise.getImageUrl());
+            }
+        });
+        //Glide.with(getActivity().getApplicationContext()).load(storageReference).into(exerciseholder.exerciseName.getBackground());
+    }
+    //endregion
 
 
     @Override
@@ -231,18 +285,22 @@ public class ExerscisesFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
-    }
 
+
+
+    //Képek betöltése
     private class ImageLoadAsync extends AsyncTask<String, Void, Bitmap> {
+
         ExerciseAdapter.ExerciseViewHolder holder;
         public ImageLoadAsync(ExerciseAdapter.ExerciseViewHolder holder){
             this.holder=holder;
         }
         @Override
         protected Bitmap doInBackground(String... params) {
+            if(isDetached()){
+                cancel(true);
+                return null;
+            }
             // your background code fetch InputStream
             try {
                 URL url=new URL(params[0]);
@@ -257,14 +315,19 @@ public class ExerscisesFragment extends Fragment {
             return null;
         }
 
+
         @Override
         protected void onPostExecute(Bitmap bmp) {
-            super.onPostExecute(bmp);
+            if(isDetached())
+                return;
             if(bmp != null){
+            super.onPostExecute(bmp);
                 Drawable d = new BitmapDrawable(getResources(), bmp);
                 if(holder != null)
-                    holder.exerciseName.setBackground(d);
+                    holder.exerciseImage.setImageDrawable(d);
+//                    holder.exerciseName.setBackground(d);
             }
         }
+
     }
 }

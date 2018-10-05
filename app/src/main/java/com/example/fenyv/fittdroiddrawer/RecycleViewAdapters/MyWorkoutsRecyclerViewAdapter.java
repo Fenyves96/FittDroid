@@ -1,16 +1,14 @@
-package com.example.fenyv.fittdroiddrawer;
+package com.example.fenyv.fittdroiddrawer.RecycleViewAdapters;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.fenyv.fittdroiddrawer.myworkoutsFragment.OnListFragmentInteractionListener;
-import com.example.fenyv.fittdroiddrawer.dummy.DummyContent.DummyItem;
+import com.example.fenyv.fittdroiddrawer.Entities.Workout;
+import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.R;
 
 import java.util.List;
 
@@ -21,10 +19,10 @@ import java.util.List;
  */
 public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkoutsRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Workout> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyWorkoutsRecyclerViewAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
+    public MyWorkoutsRecyclerViewAdapter(List<Workout> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -39,8 +37,8 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        //holder.mIdView.setText(mValues.get(position).id);
+        //holder.mContentView.setText(mValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +62,7 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Workout mItem;
 
         public ViewHolder(View view) {
             super(view);

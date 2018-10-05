@@ -3,8 +3,8 @@ package com.example.fenyv.fittdroiddrawer;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -35,47 +35,49 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Objects;
+import java.util.Observable;
 
 /**
  * Created by fenyv on 2018. 03. 30..
  */
 
-public class SignInController  implements GoogleApiClient.OnConnectionFailedListener{
+public class SignInController  extends Observable implements GoogleApiClient.OnConnectionFailedListener{
     private static String TAG = "MAIN:ACTIVITY";
     private String personPhotoUrl;
     GoogleApiClient mgGoogleApiClient;
     GoogleSignInClient mGoogleSignInClient;
-    ImageView profilePicture;
+    ImageView mProfilePicture;
 
-    public String getAcc_name() {
-        return acc_name;
-    }
-
-    String acc_name;
-
-    public String getAcc_id() {
-        return acc_id;
-    }
-
-    public static String acc_id;
-
-    public String getAcc_email() {
-        return acc_email;
-    }
-
-    String acc_email;
-
+    String mUsername;
+    String mEmailAdress;
+    public static String mUserId;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private static int RC_SIGN_IN = 0;
+    AppCompatActivity activity;
+
+    public String getUsername() {
+        return mUsername;
+    }
+
+    public String getUserId() {
+        return mUserId;
+    }
+
+    public String getmEmailAdress() {
+        return mEmailAdress;
+    }
+
 
     public static int getRcSignIn() {
         return RC_SIGN_IN;
     }
 
-    public void addAuthStateListener(){
-        mAuth=FirebaseAuth.getInstance();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+//    @BindingAdapter("app:")
+//    public void addAuthStateListener(){
+//        mAuth=FirebaseAuth.getInstance();
+//        mAuth.addAuthStateListener(mAuthListener);
+//    }
 
     public void removeAuthStateListener(){
         if(mAuthListener !=null){
@@ -83,8 +85,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
         }
     }
 
-    private static int RC_SIGN_IN = 0;
-    AppCompatActivity activity;
+
 
     public SignInController(AppCompatActivity activity){
         this.activity=activity;
@@ -138,7 +139,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
 
             }
         };
-        this.profilePicture=profilePicture;
+        this.mProfilePicture =profilePicture;
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(activity);
 
         updateUI(account);
@@ -182,17 +183,17 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
     void insertProfilePicture(String url){
         personPhotoUrl =url;
         if(url.equals("empty")){
-            profilePicture.setImageResource(R.mipmap.ic_launcher_round);
+            mProfilePicture.setImageResource(R.mipmap.ic_launcher_round);
 
         }else {
 
-            Glide.with(activity.getApplicationContext()).load(url).asBitmap().fitCenter().into(new BitmapImageViewTarget(profilePicture) {
+            Glide.with(activity.getApplicationContext()).asBitmap().load(url).into(new BitmapImageViewTarget(mProfilePicture) {
                 @Override
                 protected void setResource(Bitmap resource) {
                     RoundedBitmapDrawable circularBitmapDrawable =
                             RoundedBitmapDrawableFactory.create(activity.getApplicationContext().getResources(), resource);
                     circularBitmapDrawable.setCircular(true);
-                    profilePicture.setImageDrawable(circularBitmapDrawable);
+                    mProfilePicture.setImageDrawable(circularBitmapDrawable);
                 }
             });
         }
@@ -250,7 +251,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
             // The ApiException status code indicates the detailed failure reason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            profilePicture.setImageResource(R.mipmap.ic_launcher_round);
+            mProfilePicture.setImageResource(R.mipmap.ic_launcher_round);
         }
         saveUserIDSharedP();
         savePersonPhotoUrlSharedP();
@@ -258,26 +259,28 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
 
     void updateUI(GoogleSignInAccount account) {
         if (account == null) {
-            acc_name ="Signed out";
-            acc_email ="";
-            profilePicture.setImageResource(R.mipmap.ic_launcher_round);
+            mUsername ="Signed out";
+            mEmailAdress ="";
+            mProfilePicture.setImageResource(R.mipmap.ic_launcher_round);
+
+
 
         } else {
             insertProfilePicture(getPersonPhotoUrl());
-            acc_email =account.getEmail();
-            Toast.makeText(activity, acc_email, Toast.LENGTH_SHORT).show();
-            acc_name =account.getDisplayName();
+            mEmailAdress =account.getEmail();
+            Toast.makeText(activity, mEmailAdress, Toast.LENGTH_SHORT).show();
+            mUsername =account.getDisplayName();
             ((Main_Activity)activity).updateUserInfo();
             setUserIDSharedP(account.getId());
         }
     }
     void setUserIDSharedP(String userID){
-        acc_id=userID;
+        mUserId =userID;
         SharedPreferences settings;
         settings = activity.getSharedPreferences("saveuserID", Context.MODE_PRIVATE);
         //set the sharedpref
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("userID", acc_id);
+        editor.putString("userID", mUserId);
         editor.apply();
     }
 
@@ -286,7 +289,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
         settings = activity.getSharedPreferences("saveuserID", Context.MODE_PRIVATE);
         //set the sharedpref
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString("userID", acc_id);
+        editor.putString("userID", mUserId);
         editor.apply();
     }
 
@@ -295,7 +298,7 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
         settings = activity.getSharedPreferences("saveuserID", Context.MODE_PRIVATE);
 
         //get the sharepref
-        acc_id = settings.getString("userID", "empty");
+        mUserId = settings.getString("userID", "empty");
     }
 
 
@@ -311,7 +314,6 @@ public class SignInController  implements GoogleApiClient.OnConnectionFailedList
     void loadPersonPhotoUrlSharedP(){
         SharedPreferences settings;
         settings = activity.getSharedPreferences("savephoto", Context.MODE_PRIVATE);
-
         //get the sharepref
         personPhotoUrl = settings.getString("photoUri", "empty");
     }

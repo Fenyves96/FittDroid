@@ -10,4 +10,5 @@
     <dimen name="default_textsize">12sp</dimen>
     <dimen name="bodylinearlayoutwidth">180sp</dimen>
     <dimen name="textsize_title">30sp</dimen>
+    <dimen name="exercisesTextSize">14sp</dimen>
 </resources>

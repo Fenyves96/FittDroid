@@ -9,5 +9,5 @@
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.example.fenyv.fittdroiddrawer.WorkoutsFragment"
+    tools:context="com.example.fenyv.fittdroiddrawer.Fragments.WorkoutsFragment"
     tools:listitem="@layout/fragment_workouts2" />

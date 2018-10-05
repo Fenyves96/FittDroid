@@ -21,4 +21,6 @@
     <string name="unsuccesfullSignOut">Unsuccesfull Sign Out</string>
     <string name="default_web_client">459403664713-at64jc06eni7vt1tims8gfd1ofqmnr41.apps.googleusercontent.com</string>
     <string name="noLastUpdate">Statistics Not Found!</string>
+    <string name="muscle1">Muscle1</string>
+    <string name="muscle2">Muscle2</string>
 </resources>
