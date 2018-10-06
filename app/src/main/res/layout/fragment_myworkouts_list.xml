@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,15 +10,16 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.example.fenyv.fittdroiddrawer.Fragments.MyWorkoutsFragment"
-    tools:listitem="@layout/fragment_myworkouts2" />
+    tools:listitem="@layout/fragment_myworkoutsitem" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|bottom"
-        android:layout_marginEnd="40sp"
-        android:layout_marginBottom="40sp"
-        android:src="@drawable/ic_done"
-        />
-</FrameLayout>
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fabMyWorkouts"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="right|bottom"-->
+        <!--android:layout_marginEnd="40sp"-->
+        <!--android:layout_marginBottom="40sp"-->
+        <!--android:src="@drawable/ic_add_black_24dp"-->
+        <!--/>-->
+        <!--android:src="@drawable/ic_done"-->
+

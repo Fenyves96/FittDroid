@@ -1,28 +1,24 @@
 package com.example.fenyv.fittdroiddrawer.RecycleViewAdapters;
 
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import com.example.fenyv.fittdroiddrawer.Entities.Workout;
 import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
 import com.example.fenyv.fittdroiddrawer.R;
-
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
-public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkoutsRecyclerViewAdapter.ViewHolder> {
+public class MyWorkoutsItemRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkoutsItemRecyclerViewAdapter.ViewHolder> {
 
     private final List<Workout> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
-    public MyWorkoutsRecyclerViewAdapter(List<Workout> items, OnListFragmentInteractionListener listener) {
+    public MyWorkoutsItemRecyclerViewAdapter(List<Workout> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -30,7 +26,8 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_myworkouts2, parent, false);
+                .inflate(R.layout.fragment_myworkoutsitem, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -51,6 +48,25 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
                 }
             }
         });
+
+        //FloatingActionButton fab= holder.mView.findViewById(R.id.fabMyWorkouts);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(holder.mView.getContext(),"faszom",Toast.LENGTH_LONG).show();
+            }
+        });
+
+    }
+
+    private void initalize(final View view) {
+//        fab=view.findViewById(R.id.fabMyWorkouts);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(view.getContext(),"fabbutton", Toast.LENGTH_SHORT).show();
+//            }
+//        });
     }
 
     @Override
@@ -69,6 +85,8 @@ public class MyWorkoutsRecyclerViewAdapter extends RecyclerView.Adapter<MyWorkou
             mView = view;
             mIdView = (TextView) view.findViewById(R.id.id);
             mContentView = (TextView) view.findViewById(R.id.content);
+            Toast.makeText(view.getContext(), "asdasd", Toast.LENGTH_SHORT).show();
+            initalize(view);
         }
 
         @Override
