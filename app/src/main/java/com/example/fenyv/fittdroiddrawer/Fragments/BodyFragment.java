@@ -22,12 +22,7 @@ import com.example.fenyv.fittdroiddrawer.SignInController;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Belal on 18/09/16.
@@ -175,6 +170,13 @@ public class BodyFragment extends Fragment {
             }
         });
         loadEditTexts();
+
+        calcbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bodyController.Calculate(getFragment(),getContext());
+            }
+        });
     }
 
 

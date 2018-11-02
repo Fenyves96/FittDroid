@@ -2,6 +2,9 @@ package com.example.fenyv.fittdroiddrawer.Controllers;
 
 import android.content.Context;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.fenyv.fittdroiddrawer.Fragments.BodyFragment;
@@ -72,4 +75,44 @@ public class BodyController {
         updateBodyInfo(etNeck,context);
     }
 
+    public void Calculate(BodyFragment source,Context context) {
+        EditText etHeight=source.getActivity().findViewById(R.id.etheight);
+        EditText etWeight=source.getActivity().findViewById(R.id.etweight);
+        EditText etWaist=source.getActivity().findViewById(R.id.etwaist);
+        EditText etHip=source.getActivity().findViewById(R.id.ethip);
+        EditText etNeck=source.getActivity().findViewById(R.id.etneck);
+        TextView resultTv=source.getActivity().findViewById(R.id.tvcalc);
+
+        float height=Float.valueOf(etHeight.getText().toString());
+        float weight=Float.valueOf(etWeight.getText().toString());
+        float waist=Float.valueOf(etWaist.getText().toString());
+        float hip=Float.valueOf(etHip.getText().toString());
+        float neck=Float.valueOf(etNeck.getText().toString());
+
+        RadioGroup group=source.getActivity().findViewById(R.id.genderRadioGroup);
+        if(group.getCheckedRadioButtonId()==-1){
+            Toast.makeText(context, "Please choose your gender", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else {
+            int selectedId = group.getCheckedRadioButtonId();
+            // find the radiobutton by returned id
+            RadioButton selectedRadioButton = (RadioButton) source.getActivity().findViewById(selectedId);
+            double result=0.0;
+            if(selectedRadioButton.getText().toString().equals("male")){
+                result=495/(1.0324 - 0.19077*java.lang.Math.log10(waist-neck) + 0.15456*java.lang.Math.log10(height))-450;
+            }
+            else{
+                result=495/(1.29579  - 0.35004*java.lang.Math.log10(waist-neck) + 0.22100*java.lang.Math.log10(height))-450;
+            }
+            resultTv.setText(String.format("BodyFat: %.2f "+"%%\n " +
+                    "Body Fat Mass: %.2f kg\n "+
+                    "Lean Body Mass: %.2f kg\n ",result,result/100*weight,(100-result)/100*weight));
+        }
+
+
+
+
+
+    }
 }

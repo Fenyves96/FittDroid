@@ -11,13 +11,10 @@
         android:layout_width="match_parent"
         android:layout_marginStart="@dimen/text_margin"
         android:layout_marginEnd="@dimen/text_margin"
+        android:layout_marginBottom="@dimen/text_margin"
+        android:layout_marginTop="@dimen/text_margin"
 
         >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            >
             <TextView
                 android:id="@+id/myWorkoutId"
                 android:text="0"
@@ -31,11 +28,7 @@
                 android:layout_height="match_parent"
                 android:text="asdfsdljgksfgkdfjghkdjf"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textSize="20sp"/>
-        </LinearLayout>
-
-
-
-
     </android.support.v7.widget.CardView>
 </LinearLayout>

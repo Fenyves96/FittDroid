@@ -1,6 +1,5 @@
-package com.example.fenyv.fittdroiddrawer.Fragments;
+package com.example.fenyv.fittdroiddrawer;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,14 +18,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button;
 
-import com.bumptech.glide.Glide;
 import com.example.fenyv.fittdroiddrawer.Entities.Exercise;
-import com.example.fenyv.fittdroiddrawer.ExerciseDetailsActivity;
+import com.example.fenyv.fittdroiddrawer.Entities.Workout;
+import com.example.fenyv.fittdroiddrawer.Entities.WorkoutExercise;
+import com.example.fenyv.fittdroiddrawer.Fragments.ExerscisesFragment;
 import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
-import com.example.fenyv.fittdroiddrawer.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -41,32 +40,28 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
-public class ExerscisesFragment extends Fragment {
-
+public class ExercisesForAddingActivity extends AppCompatActivity implements SetsAndRepsDialog.SetAndRepsDialogListener {
     List<Exercise> exercises;
-    ExerciseAdapter adapter;
+    ExercisesForAddingActivity.ExerciseAdapter adapter;
     FirebaseDatabase database;
     DatabaseReference reference;
     RecyclerView recyclerView;
-    ExerciseAdapter.ExerciseViewHolder exerciseholder;
+    Workout workout;
+    private Exercise actExercise;
+
+    ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder exerciseholder;
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
-    private int mColumnCount = 2; //hány oszlopban jelenjenek meg a gyakorlatok
+    private int mColumnCount = 1; //hány oszlopban jelenjenek meg a gyakorlatok
     private OnListFragmentInteractionListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ExerscisesFragment() {
+    public ExercisesForAddingActivity() {
     }
 
     // TODO: Customize parameter initialization
@@ -80,61 +75,55 @@ public class ExerscisesFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_exercises_for_adding_items);
+        mColumnCount = 1;
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_exercisegriditem_list, container, false);
-
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) findViewById(R.id.fragment_exercises_for_adding_item_recycle_view);
             if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
             } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+                recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), mColumnCount));
             }
             exercises=new ArrayList<>();
-            adapter=new ExerciseAdapter(exercises, mListener);
-        }
+            adapter=new ExercisesForAddingActivity.ExerciseAdapter(exercises, mListener);
 
         database=FirebaseDatabase.getInstance();
         getDataFromDataBase();
-        getActivity().setTitle("Exercises");
-        return view;
+        this.setTitle("Exercises");
+        workout=(Workout) getIntent().getSerializableExtra("workout");
+    }
+    //Visszatérünk az előző menüponthoz.
+    @Override
+    public boolean navigateUpTo(Intent upIntent) {
+        super.onBackPressed();
+        return true;
     }
     /**
-    * Összeszedjük az összes gyakorlatot az adatbázisból és itt kezeljük le,
+     * Összeszedjük az összes gyakorlatot az adatbázisból és itt kezeljük le,
      * hogy mi történjen, ha bármiféle módosítás történne az adatbázisban.
-    */
-    void getDataFromDataBase(){
+     */
+    void getDataFromDataBase() {
 //        Map<String, Exercise> exerciseMap = new HashMap<>();
 //        exerciseMap.put("bench press3",new Exercise("benchpress","description","biceps"));
-        reference=database.getReference("Exercises");
+        reference = database.getReference("Exercises");
 //        reference.setValue(exerciseMap);
         reference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Exercise exercise;
-                exercise=dataSnapshot.getValue(Exercise.class);
-                if(exercise!=null)
+                exercise = dataSnapshot.getValue(Exercise.class);
+                if (exercise != null)
 //                    Toast.makeText(getContext(), exercise.toString(), Toast.LENGTH_SHORT).show();
-                exercises.add(exercise);
+                    exercises.add(exercise);
                 recyclerView.setAdapter(adapter);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Exercise exercise;
-                exercise=dataSnapshot.getValue(Exercise.class);
+                exercise = dataSnapshot.getValue(Exercise.class);
                 exercises.remove(exercise);
                 exercises.add(exercise);
                 recyclerView.setAdapter(adapter);
@@ -143,7 +132,7 @@ public class ExerscisesFragment extends Fragment {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Exercise exercise;
-                exercise=dataSnapshot.getValue(Exercise.class);
+                exercise = dataSnapshot.getValue(Exercise.class);
                 //Toast.makeText(getContext(), dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
                 exercises.remove(exercise);
                 recyclerView.setAdapter(adapter);
@@ -161,8 +150,28 @@ public class ExerscisesFragment extends Fragment {
         });
     }
 
+    @Override
+    public void applyDatas(int sets, int reps) {
+        //megérkezett a sets és reps
+        if(sets!=0 && reps!=0)
+        {
+            //Az adott ID-ű felhasználó, adott workoutjához hozzáadjuk a az adott gyakorlatot adott sets-el és repssel
+            DatabaseReference myRef = database.getReference(SignInController.mUserId)
+                    .child("MyWorkouts").child(workout.getName())
+                    .child("WorkoutExercises").child(actExercise.getName());
+            WorkoutExercise workoutExercise=new WorkoutExercise(actExercise.getName(),actExercise.getId(),sets,reps);
+            myRef.setValue(workoutExercise);
+//            myRef.child("set").setValue(sets);
+//            myRef.child("rep").setValue(reps);
+//            myRef.child("exerciseId").setValue(actExercise.getId());
+//            myRef.child("exerciseName").setValue(actExercise.getName());
+            Toast.makeText(this, "Added", Toast.LENGTH_SHORT).show();
+        }
+        Toast.makeText(this, "Set and rep: "+Integer.toString(sets)+" "+Integer.toString(reps), Toast.LENGTH_SHORT).show();
+    }
+
     //region ExerciseAdapter
-    public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>
+    public class ExerciseAdapter extends RecyclerView.Adapter<ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder>
     {
         List<Exercise> exercises;
         OnListFragmentInteractionListener mlistener;
@@ -173,10 +182,10 @@ public class ExerscisesFragment extends Fragment {
         }
 
         @Override
-        public ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_exercisegriditem,parent,false);
-               exerciseholder=new ExerciseViewHolder(view);
-            return  new ExerciseViewHolder(view);
+        public ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_exercises_for_adding_item,parent,false);
+            exerciseholder=new ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder(view);
+            return  new ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder(view);
         }
 
         @Override
@@ -185,59 +194,84 @@ public class ExerscisesFragment extends Fragment {
         }
 
         @Override
-        public void onBindViewHolder(final ExerciseAdapter.ExerciseViewHolder holder, int position) {
+        public void onBindViewHolder(final ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder holder, int position) {
             holder.exercise=exercises.get(position);
             holder.exerciseName.setText(holder.exercise.getName());
+            holder.exerciseMuscles.setText(holder.exercise.getMuscle1());
+            if(holder.exercise.getMuscle2()!="")
+            {
+                holder.exerciseMuscles.append(","+holder.exercise.getMuscle2());
+                if(holder.exercise.getMuscle3()!="")
+                {
+                    holder.exerciseMuscles.append(","+holder.exercise.getMuscle3());
+                }
+            }
             if(holder.exercise!=null){
 
-                    new ImageLoadAsync(holder).execute(holder.exercise.getImageUrl()); //képek betöltése
+                new ExercisesForAddingActivity.ImageLoadAsync(holder).execute(holder.exercise.getImageUrl()); //képek betöltése
                 GetUrlForImage("");
                 //Toast.makeText(getContext(), GetUrlForImage(""), Toast.LENGTH_SHORT).show();
             }
             else{
-            holder.exerciseName.setBackgroundResource(R.drawable.bench_press);}
+                holder.exerciseName.setBackgroundResource(R.drawable.bench_press);}
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     loadExercise(holder.exercise);
                     //Toast.makeText(v.getContext(), holder.exerciseName.getText(), Toast.LENGTH_SHORT).show();
-            }
+                }
 
-});
+            });
         }
 
         private void loadExercise(Exercise exercise)
         {
-            Intent myIntent = new Intent(getActivity(), ExerciseDetailsActivity.class);
+            Intent myIntent = new Intent(ExercisesForAddingActivity.this, ExerciseDetailsActivity.class);
             myIntent.putExtra("exercise",exercise);
             //TODO: Ha lesz muscle3, akkor azt is adjuk át
-            getActivity().startActivity(myIntent);
+            startActivity(myIntent);
         }
 
 
         public class ExerciseViewHolder extends RecyclerView.ViewHolder{
             TextView exerciseName;
+            TextView exerciseMuscles;
             ImageView exerciseImage;
+            Button exerciseAddButton;
             Exercise exercise;
             public final View mView;
             public ExerciseViewHolder(View itemView){
                 super(itemView);
                 mView=itemView;
-                exerciseName=itemView.findViewById(R.id.content);
-                exerciseImage=itemView.findViewById(R.id.exercise_imageInExercisesFragment);
+                exerciseAddButton=itemView.findViewById(R.id.fragment_exercises_for_adding_item_addbutton);
+                exerciseName=itemView.findViewById(R.id.fragment_exercises_for_adding_item_name);
+                exerciseMuscles=itemView.findViewById(R.id.fragment_exercises_for_adding_item_muscles);
+                exerciseImage=itemView.findViewById(R.id.exercise_imageInExercisesforAddingFragment);
+                exerciseAddButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        actExercise=exercise;
+                        openDialog();
+                    }
+                });
             }
+        }
+
+        private void openDialog() {
+            SetsAndRepsDialog setsAndRepsDialog =new SetsAndRepsDialog();
+            setsAndRepsDialog.show(getSupportFragmentManager(),"example");
         }
     }
 
     private void GetUrlForImage(String name) {
         // Reference to an image file in Cloud Storage
-        StorageReference storageReference=FirebaseStorage.getInstance().getReference();
+        StorageReference storageReference= FirebaseStorage.getInstance().getReference();
         StorageReference pathref= storageReference.child("Exercises/18-10.jpg");
         pathref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Toast.makeText(getContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ExercisesForAddingActivity.this, uri.toString(), Toast.LENGTH_SHORT).show();
                 //new ImageLoadAsync(holder).execute(holder.exercise.getImageUrl());
             }
         });
@@ -245,23 +279,6 @@ public class ExerscisesFragment extends Fragment {
     }
     //endregion
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -279,16 +296,16 @@ public class ExerscisesFragment extends Fragment {
     //Képek betöltése
     private class ImageLoadAsync extends AsyncTask<String, Void, Bitmap> {
 
-        ExerciseAdapter.ExerciseViewHolder holder;
-        public ImageLoadAsync(ExerciseAdapter.ExerciseViewHolder holder){
+        ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder holder;
+        public ImageLoadAsync(ExercisesForAddingActivity.ExerciseAdapter.ExerciseViewHolder holder){
             this.holder=holder;
         }
         @Override
         protected Bitmap doInBackground(String... params) {
-            if(isDetached()){
-                cancel(true);
-                return null;
-            }
+//            if(isDetached()){
+//                cancel(true);
+//                return null;
+//            }
             // your background code fetch InputStream
             try {
                 URL url=new URL(params[0]);
@@ -306,10 +323,10 @@ public class ExerscisesFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Bitmap bmp) {
-            if(isDetached())
-                return;
+//            if(isDetached())
+//                return;
             if(bmp != null){
-            super.onPostExecute(bmp);
+                super.onPostExecute(bmp);
                 Drawable d = new BitmapDrawable(getResources(), bmp);
                 if(holder != null)
                     holder.exerciseImage.setImageDrawable(d);

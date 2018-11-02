@@ -1,21 +1,26 @@
 package com.example.fenyv.fittdroiddrawer.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.fenyv.fittdroiddrawer.Contents.WorkoutContent;
+import com.example.fenyv.fittdroiddrawer.AddNewWorkoutDialog;
 import com.example.fenyv.fittdroiddrawer.Entities.Workout;
 import com.example.fenyv.fittdroiddrawer.Interfaces.OnListFragmentInteractionListener;
+import com.example.fenyv.fittdroiddrawer.MyWorkoutDetailsActivity;
 import com.example.fenyv.fittdroiddrawer.R;
 import com.example.fenyv.fittdroiddrawer.SignInController;
 import com.google.firebase.database.ChildEventListener;
@@ -44,6 +49,8 @@ public class MyWorkoutsFragment extends Fragment {
     RecyclerView recyclerView;
     WorkoutAdapter adapter;
     WorkoutAdapter.WorkoutViewHolder workoutholder;
+    private ArrayList<String>keys;
+
 
 
     // TODO: Customize parameter argument names
@@ -84,22 +91,28 @@ public class MyWorkoutsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_myworkouts_list, container, false);
 
         // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            //recyclerView.setAdapter(new WorkoutAdapter(WorkoutContent.ITEMS, mListener));
-            workouts=new ArrayList<>();
-            adapter=new WorkoutAdapter(workouts,mListener);
+       // if (view instanceof RecyclerView) {
+//            Context context = view.getContext();
+//            recyclerView = (RecyclerView) view;
+//            if (mColumnCount <= 1) {
+//                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+//            } else {
+//                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+//            }
+//            //recyclerView.setAdapter(new WorkoutAdapter(WorkoutContent.ITEMS, mListener));
+//            workouts=new ArrayList<>();
+//            adapter=new WorkoutAdapter(workouts,mListener);
 
-        }
+        //}
+        workouts=new ArrayList<>();
         database=FirebaseDatabase.getInstance();
+        keys=new ArrayList<>();
         getDataFromDataBase();
-        adapter=new WorkoutAdapter(workouts,mListener);
+        recyclerView = (RecyclerView) view.findViewById(R.id.relist);
+        final RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        adapter = new WorkoutAdapter(workouts,mListener);
+        recyclerView.setAdapter(adapter);
         getActivity().setTitle("My Workouts");
         initializeComponents(view);
         return view;
@@ -108,33 +121,39 @@ public class MyWorkoutsFragment extends Fragment {
     private void getDataFromDataBase() {
         reference=database.getReference(SignInController.mUserId+"/MyWorkouts");
         reference.addChildEventListener(new ChildEventListener() {
+
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Workout workout;
                 workout=dataSnapshot.getValue(Workout.class);
-                if(workout!=null) {
-//                    Toast.makeText(getContext(), exercise.toString(), Toast.LENGTH_SHORT).show();
-                    workouts.add(workout);
-                    recyclerView.setAdapter(adapter);
-                }
+                String key= dataSnapshot.getKey();
+                keys.add(key);
+                int index = keys.indexOf(key);
+                workout.setId(index+1);
+                workouts.add(workout);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Workout workout;
                 workout=dataSnapshot.getValue(Workout.class);
-                workouts.remove(workout);
-                workouts.add(workout);
-                recyclerView.setAdapter(adapter);
+                String key= dataSnapshot.getKey();
+                int index = keys.indexOf(key);
+                workouts.set(index,workout);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 Workout workout;
                 workout=dataSnapshot.getValue(Workout.class);
-                //Toast.makeText(getContext(), dataSnapshot.getKey(), Toast.LENGTH_SHORT).show();
                 workouts.remove(workout);
-                recyclerView.setAdapter(adapter);
+                String key= dataSnapshot.getKey();
+                int index = keys.indexOf(key);
+                keys.remove(key);
+                workouts.remove(index);
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -177,23 +196,20 @@ public class MyWorkoutsFragment extends Fragment {
             holder.workout = workouts.get(position);
             holder.workoutNameTextView.setText(holder.workout.getName());
             holder.workoutIdTextView.setText(String.valueOf(holder.workout.getId()));
-            if (holder.workout != null) {
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    loadWorkout(holder.workout);
+                }
+            });
 
-//                new ImageLoadAsync(holder).execute(holder.exercise.getImageUrl()); //képek betöltése
-//                GetUrlForImage("");
-                //Toast.makeText(getContext(), GetUrlForImage(""), Toast.LENGTH_SHORT).show();
-            } //else {
-//                holder.exerciseName.setBackgroundResource(R.drawable.bench_press);
-//            }
 
-//            holder.mView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    loadExercise(holder.exercise);
-//                    //Toast.makeText(v.getContext(), holder.exerciseName.getText(), Toast.LENGTH_SHORT).show();
-//                }
-//
-//            });
+            holder.mView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return false;
+                }
+            });
         }
             public class WorkoutViewHolder extends RecyclerView.ViewHolder{
                 TextView workoutNameTextView;
@@ -205,20 +221,61 @@ public class MyWorkoutsFragment extends Fragment {
                     mView=itemView;
                     workoutNameTextView =itemView.findViewById(R.id.myWorkoutName);
                     workoutIdTextView=itemView.findViewById(R.id.myWorkoutId);
+                    mView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                        @Override
+                        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                            menu.add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                                @Override
+                                public boolean onMenuItemClick(MenuItem item) {
+                                    reference.child(workoutNameTextView.getText().toString()).removeValue();
+                                    Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+
+                                    return true;
+                                }
+                            });
+                        }
+                    });
                 }
             }
         }
 
 
-    private void initializeComponents(View view) {
-//        fab=view.findViewById(R.id.fabMyWorkouts);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Toast.makeText(getContext(),"adfafsd",Toast.LENGTH_SHORT).show();
-//            }
-//        });
+
+    private void loadWorkout(Workout workout) {
+        Intent myIntent = new Intent(getActivity(), MyWorkoutDetailsActivity.class);
+        myIntent.putExtra("workout",workout);
+        getActivity().startActivity(myIntent);
     }
+
+
+    private void initializeComponents(View view) {
+        fab=view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openDialog();
+            }
+        });
+    }
+
+//    @Override
+//    public boolean onContextItemSelected(MenuItem item) {
+//        switch (item.getItemId()){
+//            case R.id.workout_option_menu_delete:
+//                Toast.makeText(getContext(), "deleted", Toast.LENGTH_SHORT).show();
+//                return true;
+//                default: return super.onContextItemSelected(item);
+//        }
+//
+//
+//    }
+
+    private void openDialog() {
+        AddNewWorkoutDialog addNewWorkoutDialog =new AddNewWorkoutDialog();
+        addNewWorkoutDialog.show(getActivity().getSupportFragmentManager(),"example");
+    }
+
+
 
 
     @Override

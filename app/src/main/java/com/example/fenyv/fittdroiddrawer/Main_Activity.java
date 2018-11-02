@@ -1,7 +1,9 @@
 package com.example.fenyv.fittdroiddrawer;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import android.support.annotation.NonNull;
@@ -21,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.fenyv.fittdroiddrawer.Entities.Workout;
 import com.example.fenyv.fittdroiddrawer.Fragments.BodyFragment;
 import com.example.fenyv.fittdroiddrawer.Fragments.ExerscisesFragment;
 import com.example.fenyv.fittdroiddrawer.Fragments.MyWorkoutsFragment;
@@ -31,7 +34,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Main_Activity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,OnListFragmentInteractionListener,View.OnClickListener{  //impelement onconnectionfailed
+        implements NavigationView.OnNavigationItemSelectedListener,OnListFragmentInteractionListener,View.OnClickListener
+, AddNewWorkoutDialog.AddNewWorkoutListener{  //impelement onconnectionfailed
 
     boolean mainMenuOpened=false;
     NavigationView navigationView;
@@ -52,7 +56,6 @@ public class Main_Activity extends AppCompatActivity
         //Set Layout Properties
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
-        myRef.keepSynced(true);
         myRef.keepSynced(true);
         setContentView(R.layout.activity_myworkouts_activity);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -279,5 +282,36 @@ public class Main_Activity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Object item) {
 
+    }
+
+    @Override
+    public void applyDatas(String workoutName) {
+        FirebaseDatabase database=FirebaseDatabase.getInstance();
+        if(workoutName!=null)
+        {
+
+        }
+        //Felveszünk egy új workoutot, aminek lesz egy neve és egy id-ja, majd megnyitjuk a workoutDetailsActivityt
+
+            //Az adott ID-ű felhasználó, adott workoutjához hozzáadjuk a az adott gyakorlatot adott sets-el és repssel
+            DatabaseReference myRef = database.getReference(SignInController.mUserId)
+                    .child("MyWorkouts").child(workoutName);
+            Workout workout=new Workout();
+            workout.setId(getNextWorkoutId());
+            workout.setName(workoutName);
+            myRef.setValue(workout);
+            Toast.makeText(this, R.string.added, Toast.LENGTH_SHORT).show();
+
+    }
+
+    int getNextWorkoutId(){
+        SharedPreferences settings;
+        settings = getSharedPreferences("nextWorkoutId", Context.MODE_PRIVATE);
+        int id = settings.getInt("nextWorkoutId", 1);
+        //set the sharedpref
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("nextWorkoutId", id+1);
+        editor.apply();
+        return id;
     }
 }

@@ -1,9 +1,12 @@
 package com.example.fenyv.fittdroiddrawer.Entities;
 
+import android.content.SharedPreferences;
+
+import java.io.Serializable;
 import java.util.List;
 
-public class Workout {
-    int id;
+public class Workout implements Serializable {
+    private int id;
     public String name;
     public List<WorkoutExercise> workoutExercises;
 
@@ -12,14 +15,22 @@ public class Workout {
         return name;
     }
 
-    public Workout(){}
+    public Workout(){
+
+    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String name){
+        this.name=name;
+    }
+
+
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {

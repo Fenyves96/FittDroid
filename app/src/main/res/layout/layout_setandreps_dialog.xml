@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal">
+        <EditText
+            android:id="@+id/layout_setandreps_dialog_setsedittext"
+            android:inputType="numberDecimal"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:hint="@string/sets"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="X"
+            android:textColor="@color/colorBlack"/>
+        <EditText
+            android:hint="@string/reps"
+            android:id="@+id/layout_setandreps_dialog_repsedittext"
+            android:inputType="numberDecimal"
+            android:layout_width="50sp"
+            android:layout_height="50sp" />
+
+
+
+
+</LinearLayout>

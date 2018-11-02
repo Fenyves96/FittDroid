@@ -1,20 +1,30 @@
 package com.example.fenyv.fittdroiddrawer.Entities;
 
-public class WorkoutExercise {
+import java.io.Serializable;
+
+public class WorkoutExercise implements Serializable {
 
 
-    int exerciseID;
+    int exerciseId;
     String exerciseName;
     int set;
     int rep;
 
-    //region setterek,getterek
-    public int getExerciseID() {
-        return exerciseID;
+    public WorkoutExercise(){}
+    public WorkoutExercise(String exerciseName, int exerciseId,int set, int rep) {
+        this.exerciseId=exerciseId;
+        this.exerciseName = exerciseName;
+        this.set = set;
+        this.rep = rep;
     }
 
-    public void setExerciseID(int exerciseID) {
-        this.exerciseID = exerciseID;
+    //region setterek,getterek
+    public int getExerciseId() {
+        return exerciseId;
+    }
+
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
     }
 
     public String getExerciseName() {
@@ -40,6 +50,8 @@ public class WorkoutExercise {
     public void setRep(int rep) {
         this.rep = rep;
     }
+
+
     //endregion
 
 
